@@ -1,0 +1,123 @@
+﻿@model Exam1gpi.Models.supply
+
+@{ ViewBag.Title = "Supplies";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-5">
+            <h3 class="text-primary">Suministros para concentrados</h3>
+            @using (Html.BeginForm("Supplies", "Supplies", FormMethod.Post, htmlAttributes: new { id = "form" }))
+            {
+
+                //@Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.HiddenFor(x => x.codSupply, new { id = "codSupply", Value = '0' })
+
+                @Html.LabelFor(x => x.nameSupply, htmlAttributes: new { @class = "label label-info" })
+                                @Html.TextBoxFor(x => x.nameSupply, htmlAttributes: new { @class = "form-control" })
+                                                @Html.ValidationMessage("nameSupply", new { @class = "text-danger" }) <br>
+
+                                                                @Html.LabelFor(x => x.stock, htmlAttributes: new { @class = "label label-info" })
+                                                                                @Html.TextBoxFor(x => x.stock, htmlAttributes: new { @class = "form-control", @Value = "0", @readonly = "true" }) <br>
+
+                                                                                                <div class="form-check">
+                                                                                                    @Html.LabelFor(x => x.enable, htmlAttributes: new { @class = "label label-info" })
+                                                                                                    @Html.CheckBoxFor(x => x.enable, htmlAttributes: new { @class = "form-check-input" })
+                                                                                                </div>
+
+                                                                                                                <br>
+
+                                                                                                                                <input type="submit" id="btnSave" value="Guardar" name="boton" class="btn btn-primary" onclick="confirmAlert();" />
+                                                                                                                                                <input type="submit" id="btnUpdate" value="Modificar" name="boton" class="btn btn-success" onclick="confirmAlert();" />
+                                                                                                                                                                <input type="submit" id="btnDelete" value="Eliminar" name="boton" class="btn btn-danger" onclick="confirmAlert();" />
+                                                                                                                                                                                <a href="javascript:resetForm()" value="Reset" id="btnReset" name="btnReset" class="bottom btn btn-warning">Reset</a>            }
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-7">
+            <h3>Suministros para concentrado </h3>
+            <div id="resultProductos">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>Nombre</th>
+                            <th>Existencias (lb)</th>
+                            <th>Habilitado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ foreach (Exam1gpi.Models.supply item in ViewBag.dataS)
+                                        {
+                            <tr>
+                                <td>@item.codSupply</td>
+                                <td>@item.nameSupply</td>
+                                <td>@item.stock</td>
+                                <td>@item.enable</td>
+                                <td>
+                                    <a href="javascript:cargar('@item.codSupply','@item.nameSupply','@item.stock','@item.enable', 'del')">Eliminar</a>
+                                    <a href="javascript:cargar('@item.codSupply','@item.nameSupply','@item.stock','@item.enable', 'upd')">Actualizar</a>
+                                </td>
+                            </tr> } }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmAlert() {
+        var r = confirm("¿Desea continuar con la operación?");
+
+        if (r == false) {
+            event.preventDefault();
+        }
+    }
+
+    function cargar(cod, nombre, stock, active, opcion) {
+        document.getElementById("codSupply").value = cod;
+        document.getElementById("nameSupply").value = nombre;
+        document.getElementById("stock").value = stock;
+        document.getElementById("enable").checked = active;
+
+        if (opcion == "del") {
+            $("#btnSave").hide();
+            $("#btnUpdate").hide();
+            $("#btnDelete").show();
+        } else if (opcion == "upd") {
+            $("#btnSave").hide();
+            $("#btnUpdate").show();
+            $("#btnDelete").hide();
+        }
+    }
+
+    function resetForm() {
+        onloadPage();
+        document.getElementById("codSupply").value = "0";
+        document.getElementById("nameSupply").value = "";
+        document.getElementById("stock").value = 0;
+        document.getElementById("enable").checked = false;
+    }
+
+    window.onload = onloadPage();
+    function onloadPage() {
+        $("#btnSave").show();
+        $("#btnUpdate").hide();
+        $("#btnDelete").hide();
+    }
+
+</script>
+
+

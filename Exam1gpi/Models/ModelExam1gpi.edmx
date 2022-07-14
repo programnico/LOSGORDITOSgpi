@@ -1,0 +1,697 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="test1gpiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="orders">
+          <Key>
+            <PropertyRef Name="codOrder" />
+          </Key>
+          <Property Name="codOrder" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codPerson" Type="int" Nullable="false" />
+          <Property Name="dateOrder" Type="date" />
+          <Property Name="status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ordersDetail">
+          <Key>
+            <PropertyRef Name="codOrderDetail" />
+          </Key>
+          <Property Name="codOrderDetail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codOrder" Type="int" Nullable="false" />
+          <Property Name="codProduct" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="person">
+          <Key>
+            <PropertyRef Name="codPerson" />
+          </Key>
+          <Property Name="codPerson" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codRole" Type="int" Nullable="false" />
+          <Property Name="namePerson" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="codProduct" />
+          </Key>
+          <Property Name="codProduct" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nameProduct" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="productUnitMeasurement">
+          <Key>
+            <PropertyRef Name="codProductUnitMeasurement" />
+          </Key>
+          <Property Name="codProductUnitMeasurement" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codProduct" Type="int" Nullable="false" />
+          <Property Name="codUnitMeasurement" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="codRole" />
+          </Key>
+          <Property Name="codRole" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nameRole" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sales">
+          <Key>
+            <PropertyRef Name="codSale" />
+          </Key>
+          <Property Name="codSale" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dateSale" Type="date" />
+          <Property Name="codOrder" Type="int" Nullable="false" />
+          <Property Name="price" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="settingProductSupply">
+          <Key>
+            <PropertyRef Name="codSettingProductSupply" />
+          </Key>
+          <Property Name="codSettingProductSupply" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codSupply" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+          <Property Name="codProductUnitMeasurement" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="supply">
+          <Key>
+            <PropertyRef Name="codSupply" />
+          </Key>
+          <Property Name="codSupply" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nameSupply" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="stock" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="enable" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="supplyMovement">
+          <Key>
+            <PropertyRef Name="codSupplyMovement" />
+          </Key>
+          <Property Name="codSupplyMovement" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codSupply" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="tipo" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="unitMeasurement">
+          <Key>
+            <PropertyRef Name="codUnitMeasurement" />
+          </Key>
+          <Property Name="codUnitMeasurement" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nameUnitMeasurement" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="fk_codOrder">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="ordersDetail" Type="Self.ordersDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="codOrder" />
+            </Principal>
+            <Dependent Role="ordersDetail">
+              <PropertyRef Name="codOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codOrder_s">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="sales" Type="Self.sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="codOrder" />
+            </Principal>
+            <Dependent Role="sales">
+              <PropertyRef Name="codOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codPerson">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="codPerson" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="codPerson" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codProduct_od">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="ordersDetail" Type="Self.ordersDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="codProduct" />
+            </Principal>
+            <Dependent Role="ordersDetail">
+              <PropertyRef Name="codProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codProduct_pum">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="productUnitMeasurement" Type="Self.productUnitMeasurement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="codProduct" />
+            </Principal>
+            <Dependent Role="productUnitMeasurement">
+              <PropertyRef Name="codProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codProductUnitMeasurement">
+          <End Role="productUnitMeasurement" Type="Self.productUnitMeasurement" Multiplicity="1" />
+          <End Role="settingProductSupply" Type="Self.settingProductSupply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="productUnitMeasurement">
+              <PropertyRef Name="codProductUnitMeasurement" />
+            </Principal>
+            <Dependent Role="settingProductSupply">
+              <PropertyRef Name="codProductUnitMeasurement" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codRole">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="codRole" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="codRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codSupply">
+          <End Role="supply" Type="Self.supply" Multiplicity="1" />
+          <End Role="supplyMovement" Type="Self.supplyMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="supply">
+              <PropertyRef Name="codSupply" />
+            </Principal>
+            <Dependent Role="supplyMovement">
+              <PropertyRef Name="codSupply" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codSupply_spd">
+          <End Role="supply" Type="Self.supply" Multiplicity="1" />
+          <End Role="settingProductSupply" Type="Self.settingProductSupply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="supply">
+              <PropertyRef Name="codSupply" />
+            </Principal>
+            <Dependent Role="settingProductSupply">
+              <PropertyRef Name="codSupply" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codUnitMeasurement_pum">
+          <End Role="unitMeasurement" Type="Self.unitMeasurement" Multiplicity="1" />
+          <End Role="productUnitMeasurement" Type="Self.productUnitMeasurement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="unitMeasurement">
+              <PropertyRef Name="codUnitMeasurement" />
+            </Principal>
+            <Dependent Role="productUnitMeasurement">
+              <PropertyRef Name="codUnitMeasurement" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="test1gpiModelStoreContainer">
+          <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ordersDetail" EntityType="Self.ordersDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="person" EntityType="Self.person" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="product" EntityType="Self.product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="productUnitMeasurement" EntityType="Self.productUnitMeasurement" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="roles" EntityType="Self.roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sales" EntityType="Self.sales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="settingProductSupply" EntityType="Self.settingProductSupply" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="supply" EntityType="Self.supply" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="supplyMovement" EntityType="Self.supplyMovement" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="unitMeasurement" EntityType="Self.unitMeasurement" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_codOrder" Association="Self.fk_codOrder">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="ordersDetail" EntitySet="ordersDetail" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codOrder_s" Association="Self.fk_codOrder_s">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="sales" EntitySet="sales" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codPerson" Association="Self.fk_codPerson">
+            <End Role="person" EntitySet="person" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codProduct_od" Association="Self.fk_codProduct_od">
+            <End Role="product" EntitySet="product" />
+            <End Role="ordersDetail" EntitySet="ordersDetail" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codProduct_pum" Association="Self.fk_codProduct_pum">
+            <End Role="product" EntitySet="product" />
+            <End Role="productUnitMeasurement" EntitySet="productUnitMeasurement" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codProductUnitMeasurement" Association="Self.fk_codProductUnitMeasurement">
+            <End Role="productUnitMeasurement" EntitySet="productUnitMeasurement" />
+            <End Role="settingProductSupply" EntitySet="settingProductSupply" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codRole" Association="Self.fk_codRole">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="person" EntitySet="person" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codSupply" Association="Self.fk_codSupply">
+            <End Role="supply" EntitySet="supply" />
+            <End Role="supplyMovement" EntitySet="supplyMovement" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codSupply_spd" Association="Self.fk_codSupply_spd">
+            <End Role="supply" EntitySet="supply" />
+            <End Role="settingProductSupply" EntitySet="settingProductSupply" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codUnitMeasurement_pum" Association="Self.fk_codUnitMeasurement_pum">
+            <End Role="unitMeasurement" EntitySet="unitMeasurement" />
+            <End Role="productUnitMeasurement" EntitySet="productUnitMeasurement" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="test1gpiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="orders">
+          <Key>
+            <PropertyRef Name="codOrder" />
+          </Key>
+          <Property Name="codOrder" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codPerson" Type="Int32" Nullable="false" />
+          <Property Name="dateOrder" Type="DateTime" Precision="0" />
+          <Property Name="status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ordersDetail" Relationship="Self.fk_codOrder" FromRole="orders" ToRole="ordersDetail" />
+          <NavigationProperty Name="sales" Relationship="Self.fk_codOrder_s" FromRole="orders" ToRole="sales" />
+          <NavigationProperty Name="person" Relationship="Self.fk_codPerson" FromRole="orders" ToRole="person" />
+        </EntityType>
+        <EntityType Name="ordersDetail">
+          <Key>
+            <PropertyRef Name="codOrderDetail" />
+          </Key>
+          <Property Name="codOrderDetail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codOrder" Type="Int32" Nullable="false" />
+          <Property Name="codProduct" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="orders" Relationship="Self.fk_codOrder" FromRole="ordersDetail" ToRole="orders" />
+          <NavigationProperty Name="product" Relationship="Self.fk_codProduct_od" FromRole="ordersDetail" ToRole="product" />
+        </EntityType>
+        <EntityType Name="person">
+          <Key>
+            <PropertyRef Name="codPerson" />
+          </Key>
+          <Property Name="codPerson" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codRole" Type="Int32" Nullable="false" />
+          <Property Name="namePerson" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="orders" Relationship="Self.fk_codPerson" FromRole="person" ToRole="orders" />
+          <NavigationProperty Name="roles" Relationship="Self.fk_codRole" FromRole="person" ToRole="roles" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="codProduct" />
+          </Key>
+          <Property Name="codProduct" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nameProduct" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ordersDetail" Relationship="Self.fk_codProduct_od" FromRole="product" ToRole="ordersDetail" />
+          <NavigationProperty Name="productUnitMeasurement" Relationship="Self.fk_codProduct_pum" FromRole="product" ToRole="productUnitMeasurement" />
+        </EntityType>
+        <EntityType Name="productUnitMeasurement">
+          <Key>
+            <PropertyRef Name="codProductUnitMeasurement" />
+          </Key>
+          <Property Name="codProductUnitMeasurement" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codProduct" Type="Int32" Nullable="false" />
+          <Property Name="codUnitMeasurement" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="product" Relationship="Self.fk_codProduct_pum" FromRole="productUnitMeasurement" ToRole="product" />
+          <NavigationProperty Name="settingProductSupply" Relationship="Self.fk_codProductUnitMeasurement" FromRole="productUnitMeasurement" ToRole="settingProductSupply" />
+          <NavigationProperty Name="unitMeasurement" Relationship="Self.fk_codUnitMeasurement_pum" FromRole="productUnitMeasurement" ToRole="unitMeasurement" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="codRole" />
+          </Key>
+          <Property Name="codRole" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nameRole" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="person" Relationship="Self.fk_codRole" FromRole="roles" ToRole="person" />
+        </EntityType>
+        <EntityType Name="sales">
+          <Key>
+            <PropertyRef Name="codSale" />
+          </Key>
+          <Property Name="codSale" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dateSale" Type="DateTime" Precision="0" />
+          <Property Name="codOrder" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="orders" Relationship="Self.fk_codOrder_s" FromRole="sales" ToRole="orders" />
+        </EntityType>
+        <EntityType Name="settingProductSupply">
+          <Key>
+            <PropertyRef Name="codSettingProductSupply" />
+          </Key>
+          <Property Name="codSettingProductSupply" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codSupply" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <Property Name="codProductUnitMeasurement" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="productUnitMeasurement" Relationship="Self.fk_codProductUnitMeasurement" FromRole="settingProductSupply" ToRole="productUnitMeasurement" />
+          <NavigationProperty Name="supply" Relationship="Self.fk_codSupply_spd" FromRole="settingProductSupply" ToRole="supply" />
+        </EntityType>
+        <EntityType Name="supply">
+          <Key>
+            <PropertyRef Name="codSupply" />
+          </Key>
+          <Property Name="codSupply" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nameSupply" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="stock" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="enable" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="settingProductSupply" Relationship="Self.fk_codSupply_spd" FromRole="supply" ToRole="settingProductSupply" />
+          <NavigationProperty Name="supplyMovement" Relationship="test1gpiModel.fk_codSupply" FromRole="supply" ToRole="supplyMovement" />
+        </EntityType>
+        <EntityType Name="unitMeasurement">
+          <Key>
+            <PropertyRef Name="codUnitMeasurement" />
+          </Key>
+          <Property Name="codUnitMeasurement" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nameUnitMeasurement" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="productUnitMeasurement" Relationship="Self.fk_codUnitMeasurement_pum" FromRole="unitMeasurement" ToRole="productUnitMeasurement" />
+        </EntityType>
+        <Association Name="fk_codOrder">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="ordersDetail" Type="Self.ordersDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="codOrder" />
+            </Principal>
+            <Dependent Role="ordersDetail">
+              <PropertyRef Name="codOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codOrder_s">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="sales" Type="Self.sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="codOrder" />
+            </Principal>
+            <Dependent Role="sales">
+              <PropertyRef Name="codOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codPerson">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="codPerson" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="codPerson" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codProduct_od">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="ordersDetail" Type="Self.ordersDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="codProduct" />
+            </Principal>
+            <Dependent Role="ordersDetail">
+              <PropertyRef Name="codProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codRole">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="codRole" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="codRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codProduct_pum">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="productUnitMeasurement" Type="Self.productUnitMeasurement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="codProduct" />
+            </Principal>
+            <Dependent Role="productUnitMeasurement">
+              <PropertyRef Name="codProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codProductUnitMeasurement">
+          <End Role="productUnitMeasurement" Type="Self.productUnitMeasurement" Multiplicity="1" />
+          <End Role="settingProductSupply" Type="Self.settingProductSupply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="productUnitMeasurement">
+              <PropertyRef Name="codProductUnitMeasurement" />
+            </Principal>
+            <Dependent Role="settingProductSupply">
+              <PropertyRef Name="codProductUnitMeasurement" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codUnitMeasurement_pum">
+          <End Role="unitMeasurement" Type="Self.unitMeasurement" Multiplicity="1" />
+          <End Role="productUnitMeasurement" Type="Self.productUnitMeasurement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="unitMeasurement">
+              <PropertyRef Name="codUnitMeasurement" />
+            </Principal>
+            <Dependent Role="productUnitMeasurement">
+              <PropertyRef Name="codUnitMeasurement" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_codSupply_spd">
+          <End Role="supply" Type="Self.supply" Multiplicity="1" />
+          <End Role="settingProductSupply" Type="Self.settingProductSupply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="supply">
+              <PropertyRef Name="codSupply" />
+            </Principal>
+            <Dependent Role="settingProductSupply">
+              <PropertyRef Name="codSupply" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="test1gpiEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="orders" EntityType="Self.orders" />
+          <EntitySet Name="ordersDetail" EntityType="Self.ordersDetail" />
+          <EntitySet Name="person" EntityType="Self.person" />
+          <EntitySet Name="product" EntityType="Self.product" />
+          <EntitySet Name="productUnitMeasurement" EntityType="Self.productUnitMeasurement" />
+          <EntitySet Name="roles" EntityType="Self.roles" />
+          <EntitySet Name="sales" EntityType="Self.sales" />
+          <EntitySet Name="settingProductSupply" EntityType="Self.settingProductSupply" />
+          <EntitySet Name="supply" EntityType="Self.supply" />
+          <EntitySet Name="unitMeasurement" EntityType="Self.unitMeasurement" />
+          <AssociationSet Name="fk_codOrder" Association="Self.fk_codOrder">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="ordersDetail" EntitySet="ordersDetail" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codOrder_s" Association="Self.fk_codOrder_s">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="sales" EntitySet="sales" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codPerson" Association="Self.fk_codPerson">
+            <End Role="person" EntitySet="person" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codProduct_od" Association="Self.fk_codProduct_od">
+            <End Role="product" EntitySet="product" />
+            <End Role="ordersDetail" EntitySet="ordersDetail" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codRole" Association="Self.fk_codRole">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="person" EntitySet="person" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codProduct_pum" Association="Self.fk_codProduct_pum">
+            <End Role="product" EntitySet="product" />
+            <End Role="productUnitMeasurement" EntitySet="productUnitMeasurement" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codProductUnitMeasurement" Association="Self.fk_codProductUnitMeasurement">
+            <End Role="productUnitMeasurement" EntitySet="productUnitMeasurement" />
+            <End Role="settingProductSupply" EntitySet="settingProductSupply" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codUnitMeasurement_pum" Association="Self.fk_codUnitMeasurement_pum">
+            <End Role="unitMeasurement" EntitySet="unitMeasurement" />
+            <End Role="productUnitMeasurement" EntitySet="productUnitMeasurement" />
+          </AssociationSet>
+          <AssociationSet Name="fk_codSupply_spd" Association="Self.fk_codSupply_spd">
+            <End Role="supply" EntitySet="supply" />
+            <End Role="settingProductSupply" EntitySet="settingProductSupply" />
+          </AssociationSet>
+          <EntitySet Name="supplyMovement" EntityType="test1gpiModel.supplyMovement" />
+          <AssociationSet Name="fk_codSupply" Association="test1gpiModel.fk_codSupply">
+            <End Role="supply" EntitySet="supply" />
+            <End Role="supplyMovement" EntitySet="supplyMovement" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="supplyMovement">
+          <Key>
+            <PropertyRef Name="codSupplyMovement" />
+          </Key>
+          <Property Name="codSupplyMovement" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codSupply" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="tipo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="supply" Relationship="test1gpiModel.fk_codSupply" FromRole="supplyMovement" ToRole="supply" />
+        </EntityType>
+        <Association Name="fk_codSupply">
+          <End Type="test1gpiModel.supply" Role="supply" Multiplicity="1" />
+          <End Type="test1gpiModel.supplyMovement" Role="supplyMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="supply">
+              <PropertyRef Name="codSupply" />
+            </Principal>
+            <Dependent Role="supplyMovement">
+              <PropertyRef Name="codSupply" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="test1gpiModelStoreContainer" CdmEntityContainer="test1gpiEntities">
+          <EntitySetMapping Name="orders">
+            <EntityTypeMapping TypeName="test1gpiModel.orders">
+              <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="codOrder" ColumnName="codOrder" />
+                <ScalarProperty Name="codPerson" ColumnName="codPerson" />
+                <ScalarProperty Name="dateOrder" ColumnName="dateOrder" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ordersDetail">
+            <EntityTypeMapping TypeName="test1gpiModel.ordersDetail">
+              <MappingFragment StoreEntitySet="ordersDetail">
+                <ScalarProperty Name="codOrderDetail" ColumnName="codOrderDetail" />
+                <ScalarProperty Name="codOrder" ColumnName="codOrder" />
+                <ScalarProperty Name="codProduct" ColumnName="codProduct" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="person">
+            <EntityTypeMapping TypeName="test1gpiModel.person">
+              <MappingFragment StoreEntitySet="person">
+                <ScalarProperty Name="codPerson" ColumnName="codPerson" />
+                <ScalarProperty Name="codRole" ColumnName="codRole" />
+                <ScalarProperty Name="namePerson" ColumnName="namePerson" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product">
+            <EntityTypeMapping TypeName="test1gpiModel.product">
+              <MappingFragment StoreEntitySet="product">
+                <ScalarProperty Name="codProduct" ColumnName="codProduct" />
+                <ScalarProperty Name="nameProduct" ColumnName="nameProduct" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="productUnitMeasurement">
+            <EntityTypeMapping TypeName="test1gpiModel.productUnitMeasurement">
+              <MappingFragment StoreEntitySet="productUnitMeasurement">
+                <ScalarProperty Name="codProductUnitMeasurement" ColumnName="codProductUnitMeasurement" />
+                <ScalarProperty Name="codProduct" ColumnName="codProduct" />
+                <ScalarProperty Name="codUnitMeasurement" ColumnName="codUnitMeasurement" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="roles">
+            <EntityTypeMapping TypeName="test1gpiModel.roles">
+              <MappingFragment StoreEntitySet="roles">
+                <ScalarProperty Name="codRole" ColumnName="codRole" />
+                <ScalarProperty Name="nameRole" ColumnName="nameRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sales">
+            <EntityTypeMapping TypeName="test1gpiModel.sales">
+              <MappingFragment StoreEntitySet="sales">
+                <ScalarProperty Name="codSale" ColumnName="codSale" />
+                <ScalarProperty Name="dateSale" ColumnName="dateSale" />
+                <ScalarProperty Name="codOrder" ColumnName="codOrder" />
+                <ScalarProperty Name="price" ColumnName="price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="settingProductSupply">
+            <EntityTypeMapping TypeName="test1gpiModel.settingProductSupply">
+              <MappingFragment StoreEntitySet="settingProductSupply">
+                <ScalarProperty Name="codSettingProductSupply" ColumnName="codSettingProductSupply" />
+                <ScalarProperty Name="codSupply" ColumnName="codSupply" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="codProductUnitMeasurement" ColumnName="codProductUnitMeasurement" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="supply">
+            <EntityTypeMapping TypeName="test1gpiModel.supply">
+              <MappingFragment StoreEntitySet="supply">
+                <ScalarProperty Name="codSupply" ColumnName="codSupply" />
+                <ScalarProperty Name="nameSupply" ColumnName="nameSupply" />
+                <ScalarProperty Name="stock" ColumnName="stock" />
+                <ScalarProperty Name="enable" ColumnName="enable" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="unitMeasurement">
+            <EntityTypeMapping TypeName="test1gpiModel.unitMeasurement">
+              <MappingFragment StoreEntitySet="unitMeasurement">
+                <ScalarProperty Name="codUnitMeasurement" ColumnName="codUnitMeasurement" />
+                <ScalarProperty Name="nameUnitMeasurement" ColumnName="nameUnitMeasurement" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="supplyMovement">
+            <EntityTypeMapping TypeName="test1gpiModel.supplyMovement">
+              <MappingFragment StoreEntitySet="supplyMovement">
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="codSupply" ColumnName="codSupply" />
+                <ScalarProperty Name="codSupplyMovement" ColumnName="codSupplyMovement" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,105 @@
+﻿@model Exam1gpi.Models.ordersDetail
+
+@{ ViewBag.Title = "OrdersDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h3 class="text-primary">Seleccionar producto</h3>
+            @using (Html.BeginForm("OrdersAddCart", "OrdersDetail", FormMethod.Post, htmlAttributes: new { id = "form" }))
+            {
+
+                //@Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.HiddenFor(x => x.codOrderDetail, new { id = "codProduct", Value = '0' })
+                @Html.HiddenFor(x => x.codOrder, new { id = "codOrder", Value = '0' })
+
+                                @Html.ValidationMessage("codProduct", new { @class = "text-danger" })
+                                                @Html.LabelFor(x => x.codProduct, htmlAttributes: new { @class = "label label-info" })
+                                                                @Html.DropDownListFor(x => x.codProduct, (IEnumerable<SelectListItem>)ViewBag.products, htmlAttributes: new { id = "productId", @class = "form-control" })<br>
+
+                                                                                <label class="label label-info">Medida</label>
+                                                                                                @Html.DropDownList("cmbUnidadMedida", (IEnumerable<SelectListItem>)ViewBag.unitMeasurements, htmlAttributes: new { id = "unidadDeMedida", @class = "form-control" })<br>
+
+                                                                                                                @Html.LabelFor(x => x.quantity, htmlAttributes: new { @class = "label label-info" }) //@Html.ValidationMessageFor(model => model.nameProduct)
+                                                                                                @Html.TextBoxFor(x => x.quantity, htmlAttributes: new { @class = "form-control" })
+                                                                                                                @Html.ValidationMessage("quantity", new { @class = "text-danger" }) <br>
+
+
+                                                                                                                                <input type="submit" id="btnAddCart" value="Agregar al pedido" name="boton" class="btn btn-primary" onclick="confirmAlert();" />
+                                                                                                                                                <a href="javascript:resetForm()" value="Reset" id="btnReset" name="btnReset" class="bottom btn btn-warning">Reset</a>}
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h3>Productos seleccionados</h3>
+            <div id="resultProductos">
+
+                @if (Session["PRODUCTOS"] == null)
+                {
+    <p>Acá se muestran los productos del pedido</p> }
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>Nombre </th>
+            <th>Cantidad </th>
+            <th>Medida </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ foreach (Exam1gpi.Controllers.Cart item in ViewBag.itemPedido)
+            {
+<tr>
+    <td>@item.nameProduct</td>
+    <td>@item.quantity</td>
+    <td>@item.nameUnitMeasurement</td>
+    <td>
+        @Html.ActionLink("Eliminar de pedidos", "OrdersDetailRemove", "OrdersDetail", new { id = item.codProduct }, new { onclick = "confirmAlert();" })
+    </td>
+</tr>
+ } }
+    </tbody>
+
+</table>
+                <div>
+                    @Html.ActionLink("Procesar pedido", "OrdersDetailCreateOrder", "OrdersDetail", new { }, new { onclick = "confirmAlert();", @class = "btn btn-primary" })
+
+                </div>}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function confirmAlert() {
+        var r = confirm("¿Desea continuar con la operación?");
+
+        if (r == false) {
+            event.preventDefault();
+        }
+    }
+
+    function resetForm() {
+
+        document.getElementById("productId").value = "1";
+        document.getElementById("unidadDeMedida").value = "1";
+        document.getElementById("quantity").value = "0";
+    }
+
+</script>
+
+
+

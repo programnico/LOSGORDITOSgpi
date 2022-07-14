@@ -1,0 +1,238 @@
+﻿@model Exam1gpi.Models.sales
+
+@{
+    ViewBag.Title = "Sales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+
+<!--Para manejo de mensajes(el controller nos manda una respuesta)-->
+@{
+    if (ViewBag.msj != null)
+    {
+        switch (ViewBag.msj)
+        {
+            case "Correo":
+                <script>alert('No Guardado : Este correo ya esta registrado');</script>
+                break;
+        }
+
+    }
+}
+
+<!--Funciones-->
+<script>
+    //cargar formulario con datos para eliminar
+    function cargarDel(Sal, Dat, Cod, Pri) {
+        //Juego de botones
+        $("#btnEliminar").show();
+        $("#btnModificar").hide();
+        $("#btnGuardar").hide();
+
+        document.getElementById("txtcodSale").value = Sal;
+        document.getElementById("txtcodSale").readOnly = true;
+        $("#lblIdUsuario").show();
+        $("#txtIdUsuario").show();
+
+        document.getElementById("txtFecha").value = Dat;
+        document.getElementById("txtFecha").readOnly = true;
+
+        document.getElementById("cmbcodOrder").value = Cod;
+        document.getElementById("cmbcodOrder").readOnly = true;
+
+        document.getElementById("txtprice").value = Pri;
+        document.getElementById("txtprice").readOnly = true;
+
+    }
+    //confirmar eliminacion
+    function confirmarDel() {
+        if (confirm("Desea eliminar el registro?")) {
+            document.getElementById("eliminacion").value = "si";
+        } else {
+            document.getElementById("eliminacion").value = "no";
+        }
+    }
+
+    //cargar formulario con datos para modificar
+    function cargarMod(Sal, Dat, Cod, Pri) {
+        //Juego de botones
+        $("#btnEliminar").hide();
+        $("#btnModificar").show();
+        $("#btnGuardar").hide();
+
+        document.getElementById("txtcodSale").value = Sal;
+        document.getElementById("txtcodSale").readOnly = true;
+        $("#lblIdUsuario").show();
+        $("#txtIdUsuario").show();
+
+        document.getElementById("txtFecha").value = Dat;
+        document.getElementById("txtFecha").readOnly = true;
+
+        document.getElementById("cmbcodOrder").value = Cod;
+        document.getElementById("cmbcodOrder").readOnly = false;
+
+        document.getElementById("txtprice").value = Pri;
+        document.getElementById("txtprice").readOnly = false;
+    }
+    //confirmar modificacion
+    function confirmarMod() {
+        if (confirm("Desea modificar el registro?")) {
+            document.getElementById("modificacion").value = "si";
+        } else {
+            document.getElementById("modificacion").value = "no";
+        }
+    }
+
+
+    //cargar formulario nuevo
+    function cargarNew() {
+        //Juego de botones
+        $("#btnEliminar").hide();
+        $("#btnModificar").hide();
+        $("#btnGuardar").show();
+
+        document.getElementById("txtcodSale").value = null;
+        document.getElementById("txtcodSale").readOnly = true;
+        $("#lblcodSale").hide();
+        $("#txtcodSale").hide();
+
+        document.getElementById("txtFecha").value = null;
+        document.getElementById("txtFecha").readOnly = true;
+
+        document.getElementById("cmbcodOrder").value = null;
+        document.getElementById("cmbcodOrder").readOnly = false;
+
+        document.getElementById("txtprice").value = null;
+        document.getElementById("txtprice").readOnly = false;
+    }
+
+    //cargar formulario con detalles
+    function cargarDet(Sal, Dat, Cod, Pri) {
+        //Juego de botones
+        $("#btnEliminar").hide();
+        $("#btnModificar").hide();
+        $("#btnGuardar").hide();
+
+        document.getElementById("txtcodSale").value = Sal;
+        document.getElementById("txtcodSale").readOnly = true;
+        $("#lblIdUsuario").show();
+        $("#txtIdUsuario").show();
+
+        document.getElementById("txtFecha").value = Dat;
+        document.getElementById("txtFecha").readOnly = true;
+
+        document.getElementById("cmbcodOrder").value = Cod;
+        document.getElementById("cmbcodOrder").readOnly = true;
+
+        document.getElementById("txtprice").value = Pri;
+        document.getElementById("txtprice").readOnly = true;
+    }
+
+    //PDF
+    function PDF() {
+        RedirectToAction("../Sales/ReporteSales");
+    }
+</script>
+
+<!--Datos del usuario-->
+<!--Titulo de la pagina-->
+<br />
+<h1 style="text-align:center;">Gesti&oacute;n de Ventas</h1>
+
+<!--Opcion para almacenar un nuevo usuario-->
+<br />
+<br />
+<br />
+<br />
+<div class="col-sm-12 col-md-7 col-lg-7">
+    <fieldset>
+        <legend>Gestion de Ventas</legend>
+        <input type="button" id="btnNuevo" onclick="cargarNew()" name="btnNuevo" value="Nuevo Registro" class="btn btn-success" data-toggle="modal" data-target="#formularioModal" />
+    </fieldset>
+    <br />
+    <br />
+    <!--Cargamos la data en una tabla-->
+    <div id="contenido container">
+        <table class="table table table-hover">
+            <thead>
+                <tr>
+                    <th style="display: none;">Id Sale</th>
+                    <th>Fecha</th>
+                    <th>Orden</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (Exam1gpi.Models.sales item in ViewBag.data)
+                    {
+                        <tr>
+                            <td style="display: none;">@item.codSale</td>
+                            <td>@item.dateSale</td>
+                            <td>@item.codOrder</td>
+                            <td>@item.price</td>
+                            <td>
+                                <a href="" class="btn btn-info btn-xs" onclick="javascript: cargarDet('@item.codSale', '@item.dateSale', '@item.codOrder', '@item.price')" data-toggle="modal" data-target="#formularioModal">Detalles</a>
+                                <a href="" class="btn btn-warning btn-xs" onclick="javascript:cargarMod('@item.codSale', '@item.dateSale', '@item.codOrder', '@item.price' )" data-toggle="modal" data-target="#formularioModal">Modificar</a>
+                                <a href="" class="btn btn-danger btn-xs" onclick="javascript: cargarDel('@item.codSale', '@item.dateSale', '@item.codOrder', '@item.price')" data-toggle="modal" data-target="#formularioModal">Eliminar</a>
+                                <a href="" onclick="location.href='@Url.Action("ReporteSales", "Sales")'" class="btn btn-danger btn-xs">PDF</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para la gestion-->
+    <div class="modal fade" id="formularioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- nombreActionResult, Controller, metodo, idFormulario -->
+                    @using (Html.BeginForm("SalesCrud", "Sales", FormMethod.Post, htmlAttributes: new { id = "form1" }))
+                    {
+                        @Html.LabelFor(x => x.codSale, htmlAttributes: new { @class = "label label-info", id = "lblcodSale" })<br />
+                        @Html.TextBoxFor(x => x.codSale, htmlAttributes: new { @class = "form-control", id = "txtcodSale" })<br />
+
+                        @Html.LabelFor(x => x.dateSale, htmlAttributes: new { @class = "label label-info", id = "lblFecha" })<br />
+                        @Html.TextBoxFor(x => x.dateSale, htmlAttributes: new { @class = "form-control", id = "txtFecha" })<br />
+
+                        @Html.LabelFor(x => x.codOrder, htmlAttributes: new { @class = "label label-info" })<br />
+                        @Html.DropDownListFor(x => x.codOrder, (IEnumerable<SelectListItem>)ViewBag.combo, htmlAttributes: new { @class = "form-control", id = "cmbcodOrder" })<br />
+
+                        @Html.LabelFor(x => x.price, htmlAttributes: new { @class = "label label-info", id = "lblprice" })<br />
+                        @Html.TextBoxFor(x => x.price, htmlAttributes: new { @class = "form-control", id = "txtprice" })<br />
+
+                        <input type="hidden" name="eliminacion" value="" id="eliminacion" />
+                        <input type="hidden" name="modificacion" value="" id="modificacion" />
+
+                        <div class="modal-footer">
+                            <input type="submit" name="boton" value="Guardar" id="btnGuardar" class="btn btn-success" />
+                            <input type="submit" name="boton" onclick="confirmarDel()" value="Eliminar" id="btnEliminar" class="btn btn-danger" />
+                            <input type="submit" name="boton" onclick="confirmarMod()" value="Modificar" id="btnModificar" class="btn btn-warning" />
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-sm-12 col-md-5 col-lg-5">
+    <iframe src="@Url.Action("ReporteSales", "Sales")" name="foo" id="frmEmpleado" width="100%" height="500px" frameborder="0" scrolling="no"></iframe>
+</div>

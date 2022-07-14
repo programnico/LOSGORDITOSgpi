@@ -1,0 +1,103 @@
+﻿
+@model Exam1gpi.Models.supplyMovement
+
+@{ ViewBag.Title = "SupplyMovement";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-5">
+            <h3 class="text-primary">Ingreso de suministros</h3>
+            @using (Html.BeginForm("SupplyMovement", "SupplyMovement", FormMethod.Post, htmlAttributes: new { id = "form" }))
+            {
+
+                //@Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.HiddenFor(x => x.codSupplyMovement, new { id = "codSupplyMovement", Value = '0' })
+
+                @Html.ValidationMessage("codSupply", new { @class = "text-danger" })
+                                @Html.LabelFor(x => x.codSupply, htmlAttributes: new { @class = "label label-info" })
+                                                @Html.DropDownListFor(x => x.codSupply, (IEnumerable<SelectListItem>)ViewBag.supplies, htmlAttributes: new { id = "codSupply", @class = "form-control" }) <br>
+
+                                                                <label class="label label-info">Medida</label>
+                                                                                @Html.DropDownList("cmbUnidadMedida", (IEnumerable<SelectListItem>)ViewBag.unitMeasurement, htmlAttributes: new { id = "unidadDeMedida", @class = "form-control" })<br>
+
+                                                                                                @Html.LabelFor(x => x.quantity, htmlAttributes: new { @class = "label label-info" })
+                                                                                                                @Html.TextBoxFor(x => x.quantity, htmlAttributes: new { @class = "form-control", @Value = "0" })
+                                                                                                                                @Html.ValidationMessage("quantity", new { @class = "text-danger" })
+                                                                                                                                                <br>
+
+                                                                                                                                                                <input type="submit" id="btnSave" value="Guardar" name="boton" class="btn btn-primary" onclick="confirmAlert();" />
+                                                                                                                                                                                <a href="javascript:resetForm()" value="Reset" id="btnReset" name="btnReset" class="bottom btn btn-warning">Reset</a>            }
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-7">
+            <h3>Movimientos </h3>
+            <div id="resultProductos">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>Suministro</th>
+                            <th>Cantidad (lb)</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ foreach (Exam1gpi.Models.supplyMovement item in ViewBag.dataSP)
+                                        {
+                            <tr>
+                                <td>@item.codSupplyMovement</td>
+                                <td>@item.supply.nameSupply</td>
+                                <td>@item.quantity</td>
+                                @if (item.tipo == 1)
+                                {
+                                    <td><b class="text-success"> Ingreso </b> </td>
+ }
+                                else
+                                {
+                                    <td><b class="text-danger">Retiro</b></td>
+}
+                            </tr> } }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmAlert() {
+        var r = confirm("¿Desea continuar con la operación?");
+
+        if (r == false) {
+            event.preventDefault();
+        }
+    }
+
+
+    function resetForm() {
+        onloadPage();
+        document.getElementById("codSupplyMovement").value = "0";
+        document.getElementById("quantity").value = "0";
+        document.getElementById("codSupply").value = "1";
+        document.getElementById("unidadDeMedida").value = "LIBRA";
+    }
+
+    window.onload = onloadPage();
+    function onloadPage() {
+        $("#btnSave").show();
+    }
+
+</script>
+

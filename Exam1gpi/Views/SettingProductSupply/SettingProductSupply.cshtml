@@ -1,0 +1,131 @@
+﻿@model Exam1gpi.Models.settingProductSupply
+
+@{ ViewBag.Title = "SettingProductSupply";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-5">
+            <h3 class="text-primary">Configuración de suministros por unidad de medida y producto</h3>
+            @using (Html.BeginForm("SettingProductSupply", "SettingProductSupply", FormMethod.Post, htmlAttributes: new { id = "form" }))
+            {
+
+                //@Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.HiddenFor(x => x.codSettingProductSupply, new { id = "codSettingProductSupply", Value = '0' })
+
+                @Html.ValidationMessage("codSupply", new { @class = "text-danger" })
+                                @Html.LabelFor(x => x.codSupply, htmlAttributes: new { @class = "label label-info" })
+                                                @Html.DropDownListFor(x => x.codSupply, (IEnumerable<SelectListItem>)ViewBag.supplies, htmlAttributes: new { id = "codSupply", @class = "form-control" })<br>
+
+                                                                @Html.ValidationMessage("codProductUnitMeasurement", new { @class = "text-danger" })
+                                                                                @Html.LabelFor(x => x.codProductUnitMeasurement, htmlAttributes: new { @class = "label label-info" })
+                                                                                                @Html.DropDownListFor(x => x.codProductUnitMeasurement, (IEnumerable<SelectListItem>)ViewBag.productUnitMeasurements, htmlAttributes: new { id = "codProductUnitMeasurement", @class = "form-control" })
+                                                                                                                <br>
+
+                                                                                                                                @Html.LabelFor(x => x.quantity, htmlAttributes: new { @class = "label label-info" })
+                                                                                                                                                @Html.TextBoxFor(x => x.quantity, htmlAttributes: new { @class = "form-control" })
+                                                                                                                                                                @Html.ValidationMessage("quantity", new { @class = "text-danger" }) <br>
+
+                                                                                                                                                                                <input type="submit" id="btnSave" value="Guardar" name="boton" class="btn btn-primary" onclick="confirmAlert();" />
+                                                                                                                                                                                                <input type="submit" id="btnUpdate" value="Modificar" name="boton" class="btn btn-success" onclick="confirmAlert();" />
+                                                                                                                                                                                                                <input type="submit" id="btnDelete" value="Eliminar" name="boton" class="btn btn-danger" onclick="confirmAlert();" />
+                                                                                                                                                                                                                                <a href="javascript:resetForm()" value="Reset" id="btnReset" name="btnReset" class="bottom btn btn-warning">Reset</a>            }
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-7">
+            <h3>Configuraciones por unidad de medidad </h3>
+            <p><b>1 QUINTAL </b>(100 LB) -- -- <b>1 LIBRA</b>(16 OZS)</p>
+            <div id="resultProductos">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>Nombre</th>
+                            <th>Producto - medida configurada</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ foreach (Exam1gpi.Models.settingProductSupply item in ViewBag.dataSPS)
+                                        {
+                            <tr>
+                                <td>@item.codSettingProductSupply</td>
+                                <td>@item.supply.nameSupply</td>
+                                <td>@item.productUnitMeasurement.product.nameProduct - @item.productUnitMeasurement.unitMeasurement.nameUnitMeasurement </td>
+
+                                @if (@item.productUnitMeasurement.unitMeasurement.nameUnitMeasurement.Equals("QUINTAL"))
+                                {
+                <td>@item.quantity (LB)</td> }
+                                else
+                                {
+                <td>@item.quantity (OZS)</td>}
+
+
+                                <td>
+                                    <a href="javascript:cargar('@item.codSettingProductSupply','@item.codSupply','@item.codProductUnitMeasurement', '@item.quantity','del')">Eliminar</a>
+                                    <a href="javascript:cargar('@item.codSettingProductSupply','@item.codSupply','@item.codProductUnitMeasurement', '@item.quantity', 'upd')">Actualizar</a>
+                                </td>
+                            </tr> } }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function confirmAlert() {
+        var r = confirm("¿Desea continuar con la operación?");
+
+        if (r == false) {
+            event.preventDefault();
+        }
+    }
+
+    function cargar(cod, cods, codpum, quantity, opcion) {
+        document.getElementById("codSettingProductSupply").value = cod;
+        //document.getElementById("cod_cliente").setAttribute("readonly", "true");
+        document.getElementById("codSupply").value = cods;
+        document.getElementById("codProductUnitMeasurement").value = codpum;
+        document.getElementById("quantity").value = quantity;
+
+        if (opcion == "del") {
+            $("#btnSave").hide();
+            $("#btnUpdate").hide();
+            $("#btnDelete").show();
+        } else if (opcion == "upd") {
+            $("#btnSave").hide();
+            $("#btnUpdate").show();
+            $("#btnDelete").hide();
+        }
+    }
+
+    function resetForm() {
+        onloadPage();
+        document.getElementById("codSettingProductSupply").value = "0";
+        //document.getElementById("cod_cliente").setAttribute("readonly", "true");
+        document.getElementById("codSupply").value = "1";
+        document.getElementById("codProductUnitMeasurement").value = "1";
+        document.getElementById("quantity").value = "0";
+    }
+
+
+    window.onload = onloadPage();
+    function onloadPage() {
+        $("#btnSave").show();
+        $("#btnUpdate").hide();
+        $("#btnDelete").hide();
+    }
+</script>

@@ -1,0 +1,113 @@
+﻿@model Exam1gpi.Models.productUnitMeasurement
+
+@{ ViewBag.Title = "ProductUnitMeasurement";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h3 class="text-primary">Asignar las medidas a usar</h3>
+            @using (Html.BeginForm("ProductUnitMeasurement", "ProductUnitMeasurement", FormMethod.Post, htmlAttributes: new { id = "form" }))
+            {
+
+                //@Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.HiddenFor(x => x.codProductUnitMeasurement, new { id = "codProductUnitMeasurement", Value = '0' })
+
+                @Html.ValidationMessage("codProduct", new { @class = "text-danger" })
+                                @Html.LabelFor(x => x.codProduct, htmlAttributes: new { @class = "label label-info" })
+                                                @Html.DropDownListFor(x => x.codProduct, (IEnumerable<SelectListItem>)ViewBag.products, htmlAttributes: new { id = "codProduct", @class = "form-control" })<br>
+
+                                                                @Html.ValidationMessage("codUnitMeasurement", new { @class = "text-danger" })
+                                                                                @Html.LabelFor(x => x.codUnitMeasurement, htmlAttributes: new { @class = "label label-info" })
+                                                                                                @Html.DropDownListFor(x => x.codUnitMeasurement, (IEnumerable<SelectListItem>)ViewBag.unitMeasurements, htmlAttributes: new { id = "codUnitMeasurement", @class = "form-control" })<br>
+
+                                                                                                                <input type="submit" id="btnSave" value="Guardar" name="boton" class="btn btn-primary" onclick="confirmAlert();" />
+                                                                                                                                <input type="submit" id="btnUpdate" value="Modificar" name="boton" class="btn btn-success" onclick="confirmAlert();" />
+                                                                                                                                                <input type="submit" id="btnDelete" value="Eliminar" name="boton" class="btn btn-danger" onclick="confirmAlert();" />
+                                                                                                                                                                <a href="javascript:resetForm()" value="Reset" id="btnReset" name="btnReset" class="bottom btn btn-warning">Reset</a>            }
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h3>Medidas asignadas </h3>
+            <div id="resultProductos">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ foreach (Exam1gpi.Models.productUnitMeasurement item in ViewBag.dataPUM)
+                                        {
+                            <tr>
+                                <td>@item.codProductUnitMeasurement</td>
+                                <td>@item.product.nameProduct</td>
+                                <td>@item.unitMeasurement.nameUnitMeasurement</td>
+                                <td>
+                                    <a href="javascript:cargar('@item.codProductUnitMeasurement','@item.codProduct','@item.codUnitMeasurement', 'del')">Eliminar</a>
+                                    <a href="javascript:cargar('@item.codProductUnitMeasurement','@item.codProduct','@item.codUnitMeasurement', 'upd')">Actualizar</a>
+                                </td>
+                            </tr> } }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function confirmAlert() {
+        var r = confirm("¿Desea continuar con la operación?");
+
+        if (r == false) {
+            event.preventDefault();
+        }
+    }
+
+    function cargar(cod, codp, codum, opcion) {
+        document.getElementById("codProductUnitMeasurement").value = cod;
+        //document.getElementById("cod_cliente").setAttribute("readonly", "true");
+        document.getElementById("codProduct").value = codp;
+        document.getElementById("codUnitMeasurement").value = codum;
+
+        if (opcion == "del") {
+            $("#btnSave").hide();
+            $("#btnUpdate").hide();
+            $("#btnDelete").show();
+        } else if (opcion == "upd") {
+            $("#btnSave").hide();
+            $("#btnUpdate").show();
+            $("#btnDelete").hide();
+        }
+    }
+
+    function resetForm() {
+        onloadPage();
+        document.getElementById("codProduct").value = "0";
+        document.getElementById("nameProduct").value = "";
+    }
+
+
+    window.onload = onloadPage();
+    function onloadPage() {
+        $("#btnSave").show();
+        $("#btnUpdate").hide();
+        $("#btnDelete").hide();
+    }
+
+
+
+</script>

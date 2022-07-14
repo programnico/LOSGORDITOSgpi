@@ -1,0 +1,156 @@
+﻿
+@model Exam1gpi.Models.orders
+
+@{ ViewBag.Title = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@{ //obtengo el nivel del usuario logueado
+    string nivel = @Session["nivel"].ToString();
+    string nombre = @Session["nombre"].ToString(); }
+
+<pre>
+Sesion iniciada | usuario: @Session["usuario"] (@nivel) | nombre: @nombre @Html.ActionLink("Cerrar sesion", "CerrarSesion", "Home")
+</pre>
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h3 class="text-primary">Pedidos</h3>
+            @using (Html.BeginForm("Orders", "Orders", FormMethod.Post, htmlAttributes: new { id = "form" }))
+            {
+                //@Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.HiddenFor(x => x.codOrder, new { id = "codOrder", Value = '0' })
+                @Html.HiddenFor(x => x.codPerson, new { id = "codPerson", Value = '0' }) @*@Html.ValidationMessage("codPerson", new { @class = "text-danger" })
+                    @Html.LabelFor(x => x.codPerson, htmlAttributes: new { @class = "label label-info" })
+                    <label class = "label label-info" >Cliente</label>
+                    @Html.DropDownListFor(x => x.codPerson, (IEnumerable<SelectListItem>)ViewBag.persons, htmlAttributes: new { id = "codPerson", @class = "form-control" }) <br>*@
+
+                                @Html.LabelFor(x => x.dateOrder, htmlAttributes: new { @class = "label label-info" })
+                                                @Html.EditorFor(x => x.dateOrder, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })<br>
+
+                                                                @Html.ValidationMessage("status", new { @class = "text-danger" })
+                                                                                @Html.LabelFor(x => x.status, htmlAttributes: new { @class = "label label-info" })
+                                                                                                @Html.DropDownListFor(x => x.status, (IEnumerable<SelectListItem>)ViewBag.orderStatus, htmlAttributes: new { id = "status", @class = "form-control" }) <br>
+
+                                                                                                                <input type="submit" id="btnUpdate" value="Modificar" name="boton" class="btn btn-success" onclick="confirmAlert();" />
+                                                                                                                                <a href="javascript:resetForm()" value="Reset" id="btnReset" name="btnReset" class="bottom btn btn-warning">Reset</a> <br><br>}
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h3>Detalle </h3>
+
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div id="resultProductos">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>Creado por</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ foreach (Exam1gpi.Models.orders item in ViewBag.dataO)
+                            {
+                <tr>
+                    <td>@item.codOrder</td>
+                    <td>@item.person.namePerson</td>
+                    <td>@item.dateOrder</td>
+
+                    @if (item.status == 1)
+                    {
+    <td><b class="text-primary">CREADO</b></td>
+ }
+else if (item.status == 2)
+{
+<td><b class="text-warning">EN PROCESO</b></td>
+ }
+else if (item.status == 3)
+{
+<td><b class="text-info">FINALIZADO</b></td>
+ }
+else if (item.status == 4)
+{
+<td><b class="text-success">ENTREGADO</b></td>
+}
+
+                    <td>
+                        <a href="javascript:cargar('@item.codOrder','@item.codPerson','@item.dateOrder','@item.status', 'upd')">Actualizar</a>
+                    </td>
+                </tr>
+ } }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function confirmAlert() {
+        var r = confirm("¿Desea continuar con la operación?");
+
+        if (r == false) {
+            event.preventDefault();
+        }
+    }
+
+    function cargar(cod, codp, dateOrder, status, opcion) {
+
+
+        var fec = new Date(dateOrder);
+
+        var dateOrderV = fec.toISOString().substring(0, 10);
+
+        document.getElementById("codOrder").value = cod;
+        document.getElementById("codPerson").value = codp;
+        document.getElementById("dateOrder").value = dateOrderV;
+        document.getElementById("status").value = status;
+
+        if (opcion == "upd") {
+            $("#btnUpdate").show();
+        }
+    }
+
+    function resetForm() {
+        onloadPage();
+        document.getElementById("codOrder").value = "0";
+        document.getElementById("codPerson").value = "0";
+        document.getElementById("status").value = "1";
+    }
+
+
+    window.onload = onloadPage();
+
+    function onloadPage() {
+
+        $("#btnUpdate").hide();
+
+        const date = new Date();
+        const dia = date.getDate();
+        const mes = date.getMonth() + 1;
+        const ano = date.getFullYear();
+        var fecha;
+        if (mes < 10 && dia < 10) {
+            fecha = ano + "-0" + mes + "-0" + dia;
+        } else if (mes < 10) {
+            fecha = ano + "-0" + mes + "-" + dia;
+        } else if (dia < 10) {
+            fecha = ano + "-" + mes + "-0" + dia;
+        } else {
+            fecha = ano + "-" + mes + "-" + dia;
+        }
+        document.getElementById("dateOrder").value = fecha;
+
+    }
+
+
+</script>
+

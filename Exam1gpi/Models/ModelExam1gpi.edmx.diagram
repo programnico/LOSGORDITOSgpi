@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1253867def00458681d5c4f68f75f03a" Name="Diagram1">
+        <EntityTypeShape EntityType="test1gpiModel.orders" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.ordersDetail" Width="1.5" PointX="3" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.person" Width="1.5" PointX="1.5" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.product" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.productUnitMeasurement" Width="1.5" PointX="6" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.roles" Width="1.5" PointX="1.5" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.sales" Width="1.5" PointX="3" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.settingProductSupply" Width="1.5" PointX="8.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.supply" Width="1.5" PointX="6" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="test1gpiModel.unitMeasurement" Width="1.5" PointX="3.75" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="test1gpiModel.fk_codOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codOrder_s" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codPerson" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codProduct_od" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codRole" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codProduct_pum" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codProductUnitMeasurement" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codUnitMeasurement_pum" ManuallyRouted="false" />
+        <AssociationConnector Association="test1gpiModel.fk_codSupply_spd" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="test1gpiModel.supplyMovement" Width="1.5" PointX="8.25" PointY="9" />
+        <AssociationConnector Association="test1gpiModel.fk_codSupply" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

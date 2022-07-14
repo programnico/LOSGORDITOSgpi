@@ -1,0 +1,60 @@
+﻿@{
+    if (ViewBag.msj != null)
+    {
+        switch (ViewBag.msj)
+        {
+            case "Guardado":
+                <script>alert('Registro guardado con exito');</script>
+                break;
+            case "Eliminado":
+                <script>alert('Registro eliminado con exito');</script>
+                break;
+            case "Modificado":
+                <script>alert('Registro modificado con exito');</script>
+                break;
+            case "VerificarDatos":
+                <script>alert('Verificar los datos, nombres iguales no se admmiten');</script>
+                break;
+            case "Existe":
+                <script>alert('El registro ya existe, ahora puede modificarlo');</script>
+                break;
+            case "mayora100":
+                <script>
+                    alert('La configuración para QUINTALES no debe ser mayor de 100 lb, por ejemplo 40 arroz, 40 de maiz, 10 de soya y 10 de vitaminas. ' +
+                        ' EL TOTAL DEBE SER 100 LB. Ya que esta es la configuracion usada para procesar los descuentos automaticos.');</script>
+                break;
+            case "mayora16":
+                <script>
+                    alert('La configuración para LIBRAS no debe ser mayor de 16 ozs, por ejemplo 5 ozs de arroz, 5 ozs de maiz, 3 ozs de soya y 3 ozs de vitaminas. ' +
+                        ' EL TOTAL DEBE SER 16 OZS. Ya que esta es la configuracion usada para procesar los descuentos automaticos.');</script>
+                break;
+            case "NoEliminado":
+                <script>alert('El Registro no se puede eliminar, por que esta siendo utilizado');</script>
+                break;
+            case "noAplica":
+                <script>alert('La cantidad ingresada no es correcta');</script>
+                break;
+            case "NoUnidadMedida":
+                <script>alert('El Registro no tiene asignada una unidad de medida');</script>
+                break;
+            case "configIncorrectaQ":
+                <script>alert('El producto no tiene una configuración correcta para procesar QUINTALES');</script>
+                break;
+            case "configIncorrectaL":
+                <script>alert('El producto no tiene una configuración correcta para procesar LIBRAS');</script>
+                break;
+            case "ingreseSuministros":
+                <script>alert('Los suministros no son suficientes para procesar el pedido');</script>
+                break;
+            case "agregadoListado":
+                <script>alert('Agregado al pedido');</script>
+                break;
+            case "NoExisteConfig":
+                <script>alert('No existe configuración para el producto seleccionado');</script>
+                break;
+            case "existeEnElListado":
+                <script>alert('El producto ya ha sido agregado al pedido, puede eliminar el actual y agregarlo con la nueva cantidad');</script>
+                break;
+        }
+    }
+}
